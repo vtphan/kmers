@@ -2,12 +2,7 @@
 Author: Vinhthuy Phan, 2014
 Get all kmers of a sequence
 */
-package main
-
-import (
-   "fmt"
-   "sync"
-)
+package kmers
 
 func Kmer2Num(sequence []byte, K int, i int) int {
    id := 0
@@ -82,26 +77,3 @@ func Kmers(sequence []byte, K int, start int, end int, result chan int) {
    }
 }
 
-func main(){
-   seq := []byte("CCAAGNGT")
-   var K int = 3
-
-   var wg sync.WaitGroup
-   result := make(chan int)
-
-   wg.Add(1)
-   go func() {
-      defer wg.Done()
-      Kmers(seq,K,0,len(seq),result)
-   }()
-
-   go func() {
-      wg.Wait()
-      close(result)
-   }()
-
-
-   for r := range(result) {
-      fmt.Println(r)
-   }
-}
