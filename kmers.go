@@ -36,14 +36,13 @@ func firstIndex(sequence []byte, K int, start int, end int) int {
 
 
 /*
-This function gets all kmers of "sequence" from index "start" to index "end"-1.
-The kmers are represented by numbers, stored in "result".
+Store in channel "result" all kmers (represented by numbers) of "sequence" by
+sliding a window of length K from "start" to "end"-1.
 
-enumerate all k-mers of sequence and compute their ids
 h := map[byte]int{'A':0, 'C':1, 'G':2, 'T':3}
 id = (id<<2) - (h[sequence[i-1]] << (uint(2*K))) + h[sequence[i+K-1]]
 */
-func Kmers(sequence []byte, K int, start int, end int, result chan int) {
+func Slide(sequence []byte, K int, start int, end int, result chan int) {
    uK := uint(K)
    var id int
    for i:=start; i<end-K+1; i++ {
