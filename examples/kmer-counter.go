@@ -1,3 +1,4 @@
+// example how to count k-mer frequencies in a set of reads, using multiple goroutines.
 
 package main
 
@@ -31,7 +32,7 @@ func CountFreq(readFile string) {
 
    // Spread the processing of reads into different cores
    numCores := runtime.NumCPU()
-   K := 10
+   K := 4
    var wg sync.WaitGroup
    freq := make([]int, int(math.Pow(4,float64(K))))
    lock := make([]sync.RWMutex, len(freq))
@@ -47,10 +48,11 @@ func CountFreq(readFile string) {
    }
 
    wg.Wait()
-   fmt.Println(freq[len(freq)-1], numCores)
+
+   for i:=0; i<len(freq); i++ {
+      fmt.Println(i,kmers.NumToKmer(i,K),freq[i])
+   }
 }
-
-
 
 
 func main() {

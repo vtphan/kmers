@@ -1,11 +1,14 @@
+// example of how to slide a K-window across a read
+// and get all kmers and store them into a channel
 
-package kmers
+package main
 
 import (
    "bufio"
    "os"
    "sync"
    "fmt"
+   "github.com/vtphan/kmers"
 )
 
 func FreqFromReads(readFile string) {
@@ -34,7 +37,7 @@ func FreqFromReads(readFile string) {
       go func() {
          defer wg.Done()
          for read := range(reads){
-            Slide([]byte(read), K, 0, len(read), result)
+            kmers.Slide([]byte(read), K, 0, len(read), result)
          }
       }()
    }
@@ -44,6 +47,10 @@ func FreqFromReads(readFile string) {
       close(result)
    }()
    for r := range(result) {
-      fmt.Println(r)
+      fmt.Println(r, kmers.NumToKmer(r,K))
    }
+}
+
+func main() {
+   FreqFromReads("reads1.txt")
 }
