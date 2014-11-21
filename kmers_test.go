@@ -21,7 +21,7 @@ func Test1(t *testing.T){
    }()
    go func() {
       defer wg.Done()
-      Kmers(seq,K,0,len(seq),result)
+      Slide(seq,K,0,len(seq),result)
    }()
    for r := range(result) {
       fmt.Println(r)
@@ -42,7 +42,7 @@ func Test2(t *testing.T){
    }()
    go func() {
       defer wg.Done()
-      Kmers(seq,K,0,len(seq),result)
+      Slide(seq,K,0,len(seq),result)
    }()
    for r := range(result) {
       fmt.Println(r)
