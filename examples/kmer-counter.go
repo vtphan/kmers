@@ -13,7 +13,7 @@ import (
 )
 
 
-func CountFreq(readFile string) {
+func CountFreq(readFile string, K int) {
 
    // Get all reads into a channel
    reads := make(chan string)
@@ -32,11 +32,13 @@ func CountFreq(readFile string) {
 
    // Spread the processing of reads into different cores
    numCores := runtime.NumCPU()
-   K := 4
+   runtime.GOMAXPROCS(numCores)
    var wg sync.WaitGroup
+
+   // frequncies and locks tables.  Each entry in freq has a lock in lock.
    freq := make([]int, int(math.Pow(4,float64(K))))
    lock := make([]sync.RWMutex, len(freq))
-   runtime.GOMAXPROCS(numCores)
+
    for i:=0; i<numCores; i++ {
       wg.Add(1)
       go func() {
@@ -56,5 +58,5 @@ func CountFreq(readFile string) {
 
 
 func main() {
-   CountFreq(os.Args[1])
+   CountFreq(os.Args[1], 4)
 }
