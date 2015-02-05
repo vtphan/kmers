@@ -30,7 +30,7 @@ func FreqFromReads(readFile string) {
    // Spread the processing of reads into different cores
    result := make(chan int)
    numCores := 4
-   K := 3
+   K := 5
    var wg sync.WaitGroup
    for i:=0; i<numCores; i++ {
       wg.Add(1)
