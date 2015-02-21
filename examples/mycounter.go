@@ -41,7 +41,7 @@ func CountFreq(readFile string, K int) {
       go func() {
          defer wg.Done()
          for read := range(reads){
-            c.CountAll([]byte(read))
+            c.Count([]byte(read))
          }
       }()
    }

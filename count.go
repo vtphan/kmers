@@ -26,7 +26,7 @@ func NewCounter(K int) *Counter {
    return c
 }
 
-func (c *Counter) CountAll(sequence []byte) {
+func (c *Counter) Count(sequence []byte) {
    K := c.K
    uK := uint(K)
    var id int
