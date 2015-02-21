@@ -10,7 +10,7 @@ import (
 )
 
 /*
-   Counter is used to counter ALL kmers in a set of reads
+   Counter is used to counter ALL kmers in sequences and their reverse complements.
 */
 type Counter struct {
    K int
@@ -82,6 +82,10 @@ func (c *Counter) CountAll(sequence []byte) {
 
 // ----------------------------------------------------------------
 
+/*
+   KmerCounter is used to counter only kmers in Freq in reads.  kmers in
+   reverse complements of reads are *not* counted.
+*/
 type KmerCounter struct {
    K int
    Freq map[int]int
