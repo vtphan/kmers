@@ -58,8 +58,8 @@ func firstIndex(sequence []byte, K int, start int, end int) int {
 
 
 /*
-Store in channel "result" all kmers (represented by numbers) of "sequence" by
-sliding a window of length K from "start" to "end"-1.
+Store in channel "result" all kmers (represented by numbers) of "sequence" and its
+reverse complement by sliding a window of length K from "start" to "end"-1.
 
 h := map[byte]int{'A':0, 'C':1, 'G':2, 'T':3}
 id = (id<<2) - (h[sequence[i-1]] << (uint(2*K))) + h[sequence[i+K-1]]
@@ -112,7 +112,9 @@ func Slide(sequence []byte, K int, start int, end int, result chan int) {
    }
 }
 
-
+/*
+   Count all k-mers in sequence and its reverse complement by sliding a window across the sequence
+*/
 func Count(sequence []byte, K int, start int, end int, freq []int, lock []sync.RWMutex) {
    uK := uint(K)
    var id int
@@ -163,7 +165,8 @@ func Count(sequence []byte, K int, start int, end int, freq []int, lock []sync.R
 
       lock[id_rc].Lock()
       freq[id_rc]++
-      lock[id_rc].Unlock()   }
+      lock[id_rc].Unlock()
+   }
 }
 
 

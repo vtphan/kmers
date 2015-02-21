@@ -4,12 +4,11 @@ package main
 
 import (
    "github.com/vtphan/kmers"
-   "math"
    "os"
-   "sync"
    "bufio"
    "fmt"
    "runtime"
+   "sync"
 )
 
 
@@ -35,25 +34,23 @@ func CountFreq(readFile string, K int) {
    runtime.GOMAXPROCS(numCores)
    var wg sync.WaitGroup
 
-   // frequncies and locks tables.  Each entry in freq has a lock in lock.
-   freq := make([]int, int(math.Pow(4,float64(K))))
-   lock := make([]sync.RWMutex, len(freq))
+   c := kmers.NewCounter(K)
 
    for i:=0; i<numCores; i++ {
       wg.Add(1)
       go func() {
          defer wg.Done()
          for read := range(reads){
-            kmers.Count([]byte(read), K, 0, len(read), freq, lock)
+            c.CountAll([]byte(read))
          }
       }()
    }
 
    wg.Wait()
 
-   for i:=0; i<len(freq); i++ {
-      if freq[i] > 0 {
-         fmt.Println(i,kmers.NumToKmer(i,K),freq[i])
+   for i:=0; i<len(c.Freq); i++ {
+      if c.Freq[i] > 0 {
+         fmt.Println(i,kmers.NumToKmer(i,K),c.Freq[i])
       }
    }
 }
