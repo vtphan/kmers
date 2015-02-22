@@ -1,5 +1,5 @@
-// example of how to slide a K-window across a read
-// and get all kmers and store them into a channel
+// example of how to get all kmers from sequences and their reverse complements
+// and store the kmers in a channel
 
 package main
 
