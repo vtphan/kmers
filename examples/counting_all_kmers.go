@@ -34,8 +34,10 @@ func CountFreq(readFile string, K int) {
    runtime.GOMAXPROCS(numCores)
    var wg sync.WaitGroup
 
+   // Define a new counter that count *all* kmers.
    c := kmers.NewCounter(K)
 
+   // Start counting all k-mers in reads, using different cores simultaneously.
    for i:=0; i<numCores; i++ {
       wg.Add(1)
       go func() {
@@ -46,8 +48,11 @@ func CountFreq(readFile string, K int) {
       }()
    }
 
+   // Finish counting
    wg.Wait()
 
+
+   // Print out the results
    for i:=0; i<len(c.Freq); i++ {
       if c.Freq[i] > 0 {
          fmt.Println(i,kmers.NumToKmer(i,K),c.Freq[i])
