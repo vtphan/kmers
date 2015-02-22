@@ -98,11 +98,10 @@ type KmerCounter struct {
 func NewKmerCounter(K int, freq map[int]int) *KmerCounter {
    c := new(KmerCounter)
    c.K = K
-   c.Freq = make(map[int]int)
+   c.Freq = freq
    c.lock = make(map[int]*sync.RWMutex)
 
    for kmer := range(freq) {
-      c.Freq[kmer] = freq[kmer]
       c.lock[kmer] = new(sync.RWMutex)
    }
    return c

@@ -53,8 +53,8 @@ func CountFreq(readFile string, K int) {
 
    wg.Wait()
 
-   for kmer := range(c.Freq) {
-      fmt.Println(kmer,kmers.NumToKmer(kmer,K),c.Freq[kmer])
+   for kmer := range(freq) {
+      fmt.Println(kmer,kmers.NumToKmer(kmer,K),freq[kmer])
    }
 }
 
