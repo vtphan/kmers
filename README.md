@@ -1,24 +1,6 @@
 # kmers
---
-    import "github.com/vtphan/kmers"
-
 
 ## Usage
-
-#### func  Kmer2Num
-
-```go
-func Kmer2Num(sequence []byte, K int, i int) (int, int)
-```
-compute the (base-4) numeric representations of the sequence and its reverse
-complement
-
-#### func  NumToKmer
-
-```go
-func NumToKmer(x int, K int) string
-```
-Return the K-mer (consisting of A,C,G,T) represented by x
 
 #### func  Slide1
 
