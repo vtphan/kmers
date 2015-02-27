@@ -43,6 +43,7 @@ func CountFreq(readFile string, K int) {
       go func() {
          defer wg.Done()
          for read := range(reads){
+            // Count2 counts on both strands. Count1 counts only on the main strand.
             c.Count2([]byte(read))
          }
       }()

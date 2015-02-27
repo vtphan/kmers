@@ -37,6 +37,7 @@ func FreqFromReads(readFile string) {
       go func() {
          defer wg.Done()
          for read := range(reads){
+            // Slide2 get k-mers on both strands. Slide1 gets k-mers only on the main strand.
             kmers.Slide2([]byte(read), K, 0, len(read), result)
          }
       }()
