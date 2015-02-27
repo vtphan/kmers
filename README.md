@@ -1,5 +1,3 @@
-# kmers
-
 ## Usage
 
 #### func  Slide1
@@ -7,7 +5,7 @@
 ```go
 func Slide1(sequence []byte, K int, start int, end int, result chan int)
 ```
-Store in channel "result" all kmers (represented by numbers) of "sequence" by
+Store in channel "result" all kmers of "sequence" by
 sliding a window of length K from "start" to "end"-1.
 
 #### func  Slide2
@@ -15,8 +13,7 @@ sliding a window of length K from "start" to "end"-1.
 ```go
 func Slide2(sequence []byte, K int, start int, end int, result chan int)
 ```
-Store in channel "result" all kmers (represented by numbers) of "sequence" and
-its reverse complement by sliding a window of length K from "start" to "end"-1.
+Store in channel "result" all kmers of "sequence" and its reverse complement by sliding a window of length K from "start" to "end"-1.
 
 #### type Counter
 
@@ -27,7 +24,7 @@ type Counter struct {
 }
 ```
 
-Counter is used to counter ALL kmers in sequences and their reverse complements.
+Counter is used to counter ALL kmers.
 
 #### func  NewCounter
 
@@ -58,15 +55,13 @@ type KmerCounter struct {
 }
 ```
 
-KmerCounter is used to counter only kmers in Freq in reads. kmers in reverse
-complements of reads are *not* counted.
+KmerCounter is used to counter only kmers in Freq in reads.
 
 #### func  NewKmerCounter
 
 ```go
 func NewKmerCounter(K int, freq map[int]int) *KmerCounter
 ```
-Count all kmers in freq
 
 #### func (*KmerCounter) Count1
 
