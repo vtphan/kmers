@@ -37,7 +37,7 @@ func FreqFromReads(readFile string) {
       go func() {
          defer wg.Done()
          for read := range(reads){
-            kmers.Slide([]byte(read), K, 0, len(read), result)
+            kmers.Slide2([]byte(read), K, 0, len(read), result)
          }
       }()
    }
