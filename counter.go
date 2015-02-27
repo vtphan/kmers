@@ -1,12 +1,8 @@
-/*
-Author: Vinhthuy Phan, 2015
-*/
 package kmers
 
 import (
    "sync"
    "math"
-   // "fmt"
 )
 
 /*
@@ -26,7 +22,8 @@ func NewCounter(K int) *Counter {
    return c
 }
 
-func (c *Counter) Count(sequence []byte) {
+// counting all kmers on both strands
+func (c *Counter) Count2(sequence []byte) {
    K := c.K
    uK := uint(K)
    var id int
@@ -80,6 +77,49 @@ func (c *Counter) Count(sequence []byte) {
    }
 }
 
+// counting all kmers in the main strand
+func (c *Counter) Count1(sequence []byte) {
+   K := c.K
+   uK := uint(K)
+   var id int
+   for i:=0; i<len(sequence)-K+1; i++ {
+      if i==0 || (sequence[i+K-1]!='A' && sequence[i+K-1]!='C' && sequence[i+K-1]!='G' && sequence[i+K-1]!='T') {
+         i = firstIndex(sequence, K, i, len(sequence))
+         if i==-1 {
+            return
+         }
+         id, _ = Kmer2Num(sequence, c.K, i)
+      } else {
+         switch sequence[i-1] {
+            case 'A':
+               id = (id<<2)
+            case 'C':
+               id = (id<<2) - (1 << (uK<<1))
+            case 'G':
+               id = (id<<2) - (2 << (uK<<1))
+            case 'T':
+               id = (id<<2) - (3 << (uK<<1))
+            default:
+               panic("Count: invalid base " + string(sequence[i-1]))
+         }
+         switch sequence[i+K-1] {
+            case 'A':
+            case 'C':
+               id += 1
+            case 'G':
+               id += 2
+            case 'T':
+               id += 3
+            default:
+               panic("Count: invalid base " + string(sequence[i+K-1]))
+         }
+      }
+      c.lock[id].Lock()
+      c.Freq[id]++
+      c.lock[id].Unlock()
+   }
+}
+
 // ----------------------------------------------------------------
 
 /*
@@ -107,8 +147,69 @@ func NewKmerCounter(K int, freq map[int]int) *KmerCounter {
    return c
 }
 
+// count number of k-mers in on both strands
+func (c *KmerCounter) Count2(sequence []byte) {
+   K := c.K
+   uK := uint(K)
+   var id, id_rc int
+   var ok bool
+   for i:=0; i<len(sequence)-K+1; i++ {
+      if i==0 || (sequence[i+K-1]!='A' && sequence[i+K-1]!='C' && sequence[i+K-1]!='G' && sequence[i+K-1]!='T') {
+         i = firstIndex(sequence, K, i, len(sequence))
+         if i==-1 {
+            return
+         }
+         id, id_rc = Kmer2Num(sequence, c.K, i)
+      } else {
+         switch sequence[i-1] {
+            case 'A':
+               id = (id<<2)
+               id_rc = (id_rc - 3) >> 2
+            case 'C':
+               id = (id<<2) - (1 << (uK<<1))
+               id_rc = (id_rc - 2) >> 2
+            case 'G':
+               id = (id<<2) - (2 << (uK<<1))
+               id_rc = (id_rc - 1) >> 2
+            case 'T':
+               id = (id<<2) - (3 << (uK<<1))
+               id_rc = id_rc >> 2
+            default:
+               panic("Count: invalid base " + string(sequence[i-1]))
+         }
+         switch sequence[i+K-1] {
+            case 'A':
+               id_rc += 3 << ((uK-1)<<1)
+            case 'C':
+               id += 1
+               id_rc += 2 << ((uK-1)<<1)
+            case 'G':
+               id += 2
+               id_rc += 1 << ((uK-1)<<1)
+            case 'T':
+               id += 3
+            default:
+               panic("Count: invalid base " + string(sequence[i+K-1]))
+         }
+      }
+      _, ok = c.Freq[id]
+      if ok {
+         c.lock[id].Lock()
+         c.Freq[id]++
+         c.lock[id].Unlock()
+      }
+      _, ok = c.Freq[id_rc]
+      if ok {
+         c.lock[id_rc].Lock()
+         c.Freq[id_rc]++
+         c.lock[id_rc].Unlock()
+      }
+   }
+}
 
-func (c *KmerCounter) Count(sequence []byte) {
+
+// count number of k-mers in the main strand
+func (c *KmerCounter) Count1(sequence []byte) {
    K := c.K
    uK := uint(K)
    var id int
@@ -153,4 +254,3 @@ func (c *KmerCounter) Count(sequence []byte) {
       }
    }
 }
-

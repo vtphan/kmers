@@ -1,7 +1,3 @@
-/*
-Author: Vinhthuy Phan, 2014
-Get all kmers of a sequence
-*/
 package kmers
 
 /*

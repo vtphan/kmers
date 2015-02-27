@@ -1,6 +1,3 @@
-/*
-Author: Vinhthuy Phan, 2015
-*/
 package kmers
 
 /*
